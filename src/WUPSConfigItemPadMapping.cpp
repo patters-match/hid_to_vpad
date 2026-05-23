@@ -18,6 +18,7 @@
 #include "WUPSConfigItemPadMapping.h"
 #include <controller_patcher/ControllerPatcher.hpp>
 #include <coreinit/debug.h>
+#include <wups/config_api.h>
 #include <padscore/wpad.h>
 #include <stdio.h>
 #include <string.h>
@@ -218,7 +219,7 @@ extern "C" bool WUPSConfigItemPadMapping_AddToCategory(WUPSConfigCategoryHandle 
     item->state          = CONFIG_ITEM_PAD_MAPPING_STATE_NONE;
     memset(&item->mappedPadInfo, 0, sizeof(item->mappedPadInfo));
 
-    WUPSConfigCallbacks_t callbacks = {
+    WUPSConfigAPIItemCallbacksV1 callbacks = {
             .getCurrentValueDisplay         = &WUPSConfigItemPadMapping_getCurrentValueDisplay,
             .getCurrentValueSelectedDisplay = &WUPSConfigItemPadMapping_getCurrentValueDisplaySelected,
             .onSelected                     = &WUPSConfigItemPadMapping_onSelected,
@@ -228,12 +229,22 @@ extern "C" bool WUPSConfigItemPadMapping_AddToCategory(WUPSConfigCategoryHandle 
             .onButtonPressed                = &WUPSConfigItemPadMapping_onButtonPressed,
             .onDelete                       = &WUPSConfigItemPadMapping_onDelete};
 
-    if (WUPSConfigItem_Create(&item->handle, configID, displayName, callbacks, item) < 0) {
+    WUPSConfigAPIItemOptionsV1 options = {
+            .configId    = configID,
+            .displayName = displayName,
+            .context     = item,
+            .callbacks   = callbacks};
+
+    WUPSConfigAPICreateItemOptions itemOptions;
+    itemOptions.version = WUPS_API_ITEM_OPTION_VERSION_V1;
+    itemOptions.data.v1 = options;
+
+    if (WUPSConfigAPI_Item_CreateEx(itemOptions, &item->handle) != WUPSCONFIG_API_RESULT_SUCCESS) {
         free(item);
         return false;
     }
 
-    if (WUPSConfigCategory_AddItem(cat, item->handle) < 0) {
+    if (WUPSConfigAPI_Category_AddItem(cat, item->handle) != WUPSCONFIG_API_RESULT_SUCCESS) {
         return false;
     }
     return true;
