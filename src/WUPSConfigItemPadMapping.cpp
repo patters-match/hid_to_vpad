@@ -18,7 +18,6 @@
 #include "WUPSConfigItemPadMapping.h"
 #include <controller_patcher/ControllerPatcher.hpp>
 #include <coreinit/debug.h>
-#include <wups/config_api.h>
 #include <padscore/wpad.h>
 #include <stdio.h>
 #include <string.h>
@@ -26,6 +25,7 @@
 #include <utils/logger.h>
 #include <vector>
 #include <vpad/input.h>
+#include <wups/config_api.h>
 
 // At this point the VPADRead function is already patched. But we want to use the original function (note: this could be patched by a different plugin)
 typedef int32_t (*VPADReadFunction)(VPADChan chan, VPADStatus *buffer, uint32_t buffer_size, VPADReadError *error);
