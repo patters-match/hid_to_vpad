@@ -27,7 +27,7 @@ void configMenuClosedCallback();
 
 WUPS_PLUGIN_NAME("HID to VPAD");
 WUPS_PLUGIN_DESCRIPTION("Enables HID devices as controllers on your Wii U");
-WUPS_PLUGIN_VERSION("0.2-alpha");
+WUPS_PLUGIN_VERSION("0.21-alpha");
 WUPS_PLUGIN_AUTHOR("Maschell");
 WUPS_PLUGIN_LICENSE("GPL");
 
